@@ -22,6 +22,7 @@ import {
     watchStallsData,
     watchMenusData,
     watchUserData,
+    setUserData,
 } from "./app-redux/actions";
 import { connect } from "react-redux";
 import * as firebase from "firebase";
@@ -44,11 +45,13 @@ class MainApp extends React.Component {
     }
 
     onAuthStateChanged = (user) => {
+        if (user != null) {
+            this.props.watchUserData(user);
+        } else {
+            setUserData(null);
+        }
         this.setState({ isAuthenticationReady: true });
         this.setState({ isAuthenticated: !!user });
-        if(user != null) {
-            this.props.watchUserData(user);
-        }
     };
 
     // Occurs when signout is pressed...
