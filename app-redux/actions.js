@@ -238,7 +238,7 @@ export const setUserData = (user) => ({
 
 export const watchUserData = (user) => {
     return function (dispatch) {
-        db.collection("User")
+        db.collection("Users")
             .doc(user.uid)
             .get()
             .then(function (doc) {
