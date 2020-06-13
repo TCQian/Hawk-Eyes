@@ -81,9 +81,6 @@ export const updateFoodCentresData = (foodCentre) => {
                 ),
             })
             .then(function () {
-                console.log(
-                    foodCentre.name + " foodCentre successfully written!"
-                );
                 // this dispatch will update react store.
                 dispatch(addFoodCentre(foodCentre));
             })
@@ -104,9 +101,6 @@ export const deleteFoodCentresData = (foodCentre) => {
                 ),
             })
             .then(function () {
-                console.log(
-                    foodCentre.name + " foodCentre successfully deleted!"
-                );
                 // this dispatch will update react store.
                 dispatch(deleteFoodCentre(foodCentre));
             })
@@ -145,7 +139,6 @@ export const updateStallsData = (stall) => {
                 stalls: firebase.firestore.FieldValue.arrayUnion(stall),
             })
             .then(function () {
-                console.log(stall.name + " stall successfully written!");
                 // this dispatch will update react store.
                 dispatch(addStall(stall));
             })
@@ -163,7 +156,6 @@ export const deleteStallsData = (stall) => {
                 stalls: firebase.firestore.FieldValue.arrayRemove(stall),
             })
             .then(function () {
-                console.log(stall.name + " stall successfully deleted!");
                 // this dispatch will update react store.
                 dispatch(deleteStall(stall));
             })
@@ -202,7 +194,6 @@ export const updateMenusData = (menu) => {
                 menus: firebase.firestore.FieldValue.arrayUnion(menu),
             })
             .then(function () {
-                console.log(menu.name + " menu successfully written!");
                 // this dispatch will update react store.
                 dispatch(addMenu(menu));
             })
@@ -220,7 +211,6 @@ export const deleteMenusData = (menu) => {
                 menus: firebase.firestore.FieldValue.arrayRemove(menu),
             })
             .then(function () {
-                console.log(menu.name + " menu successfully deleted!");
                 // this dispatch will update react store.
                 dispatch(deleteMenu(menu));
             })
@@ -243,7 +233,6 @@ export const watchUserData = (user) => {
             .get()
             .then(function (doc) {
                 const { email, userType } = doc.data();
-                console.log(userType);
                 dispatch(setUserData({
                     email,
                     userType: (
@@ -272,7 +261,6 @@ export const updateUserData = (user) => {
                 userId: user.userId,
             })
             .then(function () {
-                console.log(user.email + " user successfully written!");
                 // this dispatch will update react store.
                 dispatch(setUserData({
                     email: user.email,

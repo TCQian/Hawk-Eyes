@@ -47,10 +47,8 @@ class MainApp extends React.Component {
         this.setState({ isAuthenticationReady: true });
         this.setState({ isAuthenticated: !!user });
         if(user != null) {
-            console.log(user);
             this.props.watchUserData(user);
         }
-        console.log("null");
     };
 
     // Occurs when signout is pressed...
