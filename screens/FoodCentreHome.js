@@ -25,6 +25,8 @@ class FoodCentreHome extends React.Component {
           onPress={() =>
             this.props.navigation.navigate("Seats", {
               foodCentreName: this.props.route.params.name,
+              foodCentreArrayIndex: this.props.route.params
+                .foodCentreArrayIndex,
             })
           }
         >

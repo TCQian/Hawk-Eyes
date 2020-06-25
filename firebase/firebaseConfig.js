@@ -1,8 +1,8 @@
-import * as firebase from 'firebase';
-import 'firebase/firestore';
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDoqkSH0HbaSuu2LVgY7Zw9QrjoXsPqVYE",
   authDomain: "hawk-eyes-2021.firebaseapp.com",
   databaseURL: "https://hawk-eyes-2021.firebaseio.com",
@@ -10,7 +10,7 @@ const firebaseConfig = {
   storageBucket: "hawk-eyes-2021.appspot.com",
   messagingSenderId: "198372819473",
   appId: "1:198372819473:web:27eb24d382b28cf403a7b0",
-  measurementId: "G-W91DEGM36B"
+  measurementId: "G-W91DEGM36B",
 };
 
 firebase.initializeApp(firebaseConfig);
