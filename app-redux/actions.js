@@ -254,6 +254,7 @@ export const updateUserData = (user) => {
         email: user.email,
         userType: user.userType,
         userId: user.userId,
+        history: [],
       })
       .then(function () {
         // this dispatch will update react store.
@@ -267,6 +268,7 @@ export const updateUserData = (user) => {
                 ? STALL_USER
                 : PATRON_USER,
             userId: user.userId,
+            history: [],
           })
         );
       })

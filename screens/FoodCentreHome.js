@@ -4,12 +4,15 @@ import Card from "../styles/cards";
 import { globalstyles } from "../styles/globalstyles";
 import { connect } from "react-redux";
 import { deleteFoodCentresData, FOODCENTRE_USER } from "../app-redux/actions";
+import { addPatronSearchHistory } from "../app-redux/historyActions";
 
 class FoodCentreHome extends React.Component {
   componentDidMount() {
+    const foodCentreName = this.props.route.params.name;
     this.props.navigation.setOptions({
-      title: this.props.route.params.name,
+      title: foodCentreName,
     });
+    this.props.addPatronSearchHistory(foodCentreName);
   }
 
   // delete this foodCentre from database
@@ -60,6 +63,13 @@ const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-export default connect(mapStateToProps, {
-  deleteFoodCentresData,
-})(FoodCentreHome);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addPatronSearchHistory: (foodCentreName) =>
+      dispatch(addPatronSearchHistory(foodCentreName)),
+    deleteFoodCentresData: (foodCentre) =>
+      dispatch(deleteFoodCentresData(foodCentre)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FoodCentreHome);

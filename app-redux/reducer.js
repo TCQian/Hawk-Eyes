@@ -12,6 +12,7 @@ import {
   DELETE_MENU,
 } from "./actions";
 import { BOOK_SEAT, UNBOOK_SEAT } from "./seatsActions";
+import { ADD_PATRON_SEARCH_HISTORY } from "./historyActions";
 
 const foodCentreReducer = (state = [], action) => {
   // this action type is associated with database
@@ -88,6 +89,9 @@ const menuReducer = (state = [], action) => {
 const userReducer = (state = {}, action) => {
   if (action.type == SET_USER) {
     return action.payload;
+  }
+  if (action.type == ADD_PATRON_SEARCH_HISTORY) {
+    return state;
   }
   return state;
 };
