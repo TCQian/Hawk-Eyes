@@ -8,10 +8,11 @@ import {
 } from "./actions";
 
 export const ADD_PATRON_SEARCH_HISTORY = "ADD_PATRON_SEARCH_HISTORY";
-
-const user = firebase.auth().currentUser;
+export const ADD_CREATED_FOOD_CENTRE = "ADD_CREATED_FOOD_CENTRE";
 
 export const addPatronSearchHistory = (foodCentreName) => {
+  const user = firebase.auth().currentUser;
+
   return function (dispatch) {
     db.collection("Users")
       .doc(user.uid)
@@ -26,7 +27,7 @@ export const addPatronSearchHistory = (foodCentreName) => {
               history: newHistory,
             })
             .then(() => {
-              dispatch({ type: ADD_PATRON_SEARCH_HISTORY });
+              dispatch({ type: ADD_PATRON_SEARCH_HISTORY, foodCentreName });
             })
             .catch(function (error) {
               console.error("Error writing document: ", error);

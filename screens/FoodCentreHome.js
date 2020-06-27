@@ -48,12 +48,6 @@ class FoodCentreHome extends React.Component {
             <Text style={globalstyles.title}>Stalls</Text>
           </Card>
         </TouchableOpacity>
-        {
-          // only food centre owner can delete the food centre
-        }
-        {this.props.user.userType == FOODCENTRE_USER ? (
-          <Button title="Delete" onPress={this.handleDelete} />
-        ) : null}
       </View>
     );
   }

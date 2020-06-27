@@ -3,6 +3,7 @@ import * as firebase from "firebase";
 
 export const UPDATE_FOODCENTRE = "UPDATE_FOODCENTRE";
 export const DELETE_FOODCENTRE = "DELETE_FOODCENTRE";
+export const EDIT_FOODCENTRE = "EDIT_FOODCENTRE";
 export const UPDATE_STALL = "UPDATE_STALL";
 export const DELETE_STALL = "DELETE_STALL";
 export const UPDATE_MENU = "UPDATE_MENU";
@@ -25,6 +26,11 @@ export const addFoodCentre = (newFoodCentre) => ({
 
 export const deleteFoodCentre = (foodCentre) => ({
   type: DELETE_FOODCENTRE,
+  payload: foodCentre,
+});
+
+export const editFoodCentre = (foodCentre) => ({
+  type: EDIT_FOODCENTRE,
   payload: foodCentre,
 });
 
@@ -97,6 +103,45 @@ export const deleteFoodCentresData = (foodCentre) => {
       .then(function () {
         // this dispatch will update react store.
         dispatch(deleteFoodCentre(foodCentre));
+      })
+      .catch(function (error) {
+        console.error("Error writing document: ", error);
+      });
+  };
+};
+
+// this will edit a particular foodCentre from database foodCentres list
+export const editFoodCentresData = (foodCentre) => {
+  return function (dispatch) {
+    db.collection("Database")
+      .doc("F8ZKbAihxgnysKPDSP3L")
+      .get()
+      .then((doc) => {
+        const { foodCentres, menus, stalls } = doc.data();
+        const index = foodCentre.key - 1;
+
+        foodCentres[index].name = foodCentre.name;
+        foodCentres[index].numberOfStalls = foodCentre.numberOfStalls;
+        foodCentres[index].capacity = foodCentre.capacity;
+        foodCentres[index].address = foodCentre.address;
+
+        const newFoodCentres = foodCentres.map((obj) => {
+          return Object.assign({}, obj);
+        });
+
+        db.collection("Database")
+          .doc("F8ZKbAihxgnysKPDSP3L")
+          .update({
+            foodCentres: newFoodCentres,
+            menus,
+            stalls,
+          })
+          .then(function () {
+            dispatch(editFoodCentre(foodCentre));
+          })
+          .catch(function (error) {
+            console.error("Error writing document: ", error);
+          });
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -237,6 +282,7 @@ export const watchUserData = (user) => {
                 ? STALL_USER
                 : PATRON_USER,
             userId: user.uid,
+            history: user.history,
           })
         );
       })
@@ -254,7 +300,6 @@ export const updateUserData = (user) => {
         email: user.email,
         userType: user.userType,
         userId: user.userId,
-        history: [],
       })
       .then(function () {
         // this dispatch will update react store.
@@ -268,7 +313,6 @@ export const updateUserData = (user) => {
                 ? STALL_USER
                 : PATRON_USER,
             userId: user.userId,
-            history: [],
           })
         );
       })

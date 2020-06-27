@@ -10,9 +10,13 @@ import {
   DELETE_FOODCENTRE,
   DELETE_STALL,
   DELETE_MENU,
+  EDIT_FOODCENTRE,
 } from "./actions";
 import { BOOK_SEAT, UNBOOK_SEAT } from "./seatsActions";
-import { ADD_PATRON_SEARCH_HISTORY } from "./historyActions";
+import {
+  ADD_PATRON_SEARCH_HISTORY,
+  ADD_CREATED_FOOD_CENTRE,
+} from "./historyActions";
 
 const foodCentreReducer = (state = [], action) => {
   // this action type is associated with database
@@ -32,6 +36,18 @@ const foodCentreReducer = (state = [], action) => {
         value.name !== action.payload.name && value.key !== action.payload.key
       );
     });
+  }
+
+  if (action.type == EDIT_FOODCENTRE) {
+    const editedFoodCentre = action.payload;
+    const index = editedFoodCentre.key - 1;
+    const newState = [...state];
+    newState[index].name = editedFoodCentre.name;
+    newState[index].numberOfStalls = editedFoodCentre.numberOfStalls;
+    newState[index].capacity = editedFoodCentre.capacity;
+    newState[index].address = editedFoodCentre.address;
+
+    return newState;
   }
 
   if (action.type == BOOK_SEAT) {
@@ -91,7 +107,16 @@ const userReducer = (state = {}, action) => {
     return action.payload;
   }
   if (action.type == ADD_PATRON_SEARCH_HISTORY) {
-    return state;
+    let newHistory = [];
+    if (state.history === undefined) {
+      newHistory = [action.foodCentreName];
+    } else {
+      newHistory = [action.foodCentreName, ...state.history];
+    }
+    return {
+      ...state,
+      history: newHistory,
+    };
   }
   return state;
 };
