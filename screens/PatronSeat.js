@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { globalstyles } from "../styles/globalstyles";
 import { getItemsByName } from "../functions/functions";
 import { bookSeat, unbookSeat } from "../app-redux/seatsActions";
+import { PATRON_USER } from "../app-redux/actions";
 
 class PatronSeat extends React.Component {
   componentDidMount() {
@@ -21,15 +22,23 @@ class PatronSeat extends React.Component {
 
   render() {
     const index = this.props.route.params.foodCentreArrayIndex;
+    const { user } = this.props;
     console.log(index);
     return (
       <View>
         <Text>Seats: {this.seats()}</Text>
-        <Button title="Book Seat" onPress={() => this.props.bookSeat(index)} />
-        <Button
-          title="Unbook Seat"
-          onPress={() => this.props.unbookSeat(index)}
-        />
+        {user.userType == PATRON_USER ? (
+          <View>
+            <Button
+              title="Book Seat"
+              onPress={() => this.props.bookSeat(index)}
+            />
+            <Button
+              title="Unbook Seat"
+              onPress={() => this.props.unbookSeat(index)}
+            />
+          </View>
+        ) : null}
 
         {!this.seats() && <Text>This Food Centre is full</Text>}
       </View>
@@ -39,6 +48,7 @@ class PatronSeat extends React.Component {
 
 const mapStateToProps = (state) => ({
   foodCentres: state.foodCentres,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => {

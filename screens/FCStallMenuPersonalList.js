@@ -6,54 +6,48 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
-  Button,
 } from "react-native";
 import { globalstyles } from "../styles/globalstyles";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
-import { deleteStallsData } from "../app-redux/actions";
+import { deleteMenusData } from "../app-redux/actions";
 
-class FCStallPersonalList extends React.Component {
+class FCStallMenuPersonalLink extends React.Component {
   constructor(props) {
     super(props);
   }
 
   componentDidMount() {
     this.props.navigation.setOptions({
-      headerRight: () => {
-        return (
-          <View>
-            <Text onPress={() => this.handlePress()}>+</Text>
-          </View>
-        );
-      },
+      title: this.props.route.params.stall.name,
     });
   }
 
   handlePress() {
-    this.props.navigation.navigate("Add Stall and Menu");
+    this.props.navigation.navigate("Add Stall and Menu", {
+      stall: this.props.route.params.stall,
+    });
   }
 
   render() {
     const uid = this.props.user.userId;
-    const createdStalls = this.props.stalls.filter((stall) => {
-      return stall.createdBy === uid;
-    });
+    const stall = this.props.route.params.stall;
+    const createdMenus = this.props.menus
+      .filter((menu) => {
+        return menu.createdBy === uid;
+      })
+      .filter((menu) => {
+        return menu.parentKey === stall.key;
+      });
 
-    return createdStalls.length !== 0 ? (
+    return createdMenus.length !== 0 ? (
       <View>
-        <Text onPress={() => this.handlePress()}>Add new stall</Text>
+        <Text onPress={() => this.handlePress()}>Add new menu</Text>
 
         <FlatList
-          data={createdStalls}
+          data={createdMenus}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate("Menu Personal List", {
-                  stall: item,
-                });
-              }}
-            >
+            <TouchableOpacity>
               <View style={styles.card}>
                 <Text style={styles.title}>{item.name}</Text>
                 <View style={styles.setting}>
@@ -61,14 +55,15 @@ class FCStallPersonalList extends React.Component {
                     name="delete"
                     size={30}
                     style={styles.icon}
-                    onPress={() => this.props.deleteStallsData(item)}
+                    onPress={() => this.props.deleteMenusData(item)}
                   />
                   <AntDesign
                     name="edit"
                     size={30}
                     onPress={() =>
-                      this.props.navigation.navigate("Edit Stall", {
-                        stall: item,
+                      this.props.navigation.navigate("Edit Menu", {
+                        stall: stall,
+                        menu: item,
                       })
                     }
                   />
@@ -80,11 +75,9 @@ class FCStallPersonalList extends React.Component {
       </View>
     ) : (
       <View>
-        <TouchableOpacity onPress={() => this.handlePress()}>
-          <Text> Add new stall</Text>
-        </TouchableOpacity>
+        <Text onPress={() => this.handlePress()}>Add new menu</Text>
 
-        <Text style={globalstyles.title}>Your Stalls List is empty</Text>
+        <Text style={globalstyles.title}>Your Menus List is empty</Text>
       </View>
     );
   }
@@ -118,16 +111,16 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  stalls: state.stalls,
+  menus: state.menus,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteStallsData: (stall) => dispatch(deleteStallsData(stall)),
+    deleteMenusData: (menu) => dispatch(deleteMenusData(menu)),
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FCStallPersonalList);
+)(FCStallMenuPersonalLink);

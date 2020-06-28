@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * This function takes in a list of items and a item name to find out if
@@ -17,5 +17,15 @@ export const getItemsByName = (listOfItems, itemName) => {
  */
 export const getItemsByParentKey = (listOfItems, itemParentKey) => {
   const result = listOfItems.filter((item) => item.parentKey === itemParentKey);
+  return [...result];
+};
+
+/**
+ * This function takes in a list of parents and a parentkey
+ * return the parent taht has the parent KEy
+ * */
+
+export const getParentsByParentKey = (listOfItems, itemParentKey) => {
+  const result = listOfItems.filter((data) => data.key === itemParentKey);
   return [...result];
 };

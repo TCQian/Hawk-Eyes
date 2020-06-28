@@ -11,6 +11,8 @@ import {
   DELETE_STALL,
   DELETE_MENU,
   EDIT_FOODCENTRE,
+  EDIT_STALL,
+  EDIT_MENU,
 } from "./actions";
 import { BOOK_SEAT, UNBOOK_SEAT } from "./seatsActions";
 import {
@@ -40,7 +42,7 @@ const foodCentreReducer = (state = [], action) => {
 
   if (action.type == EDIT_FOODCENTRE) {
     const editedFoodCentre = action.payload;
-    const index = editedFoodCentre.key - 1;
+    const index = state.indexOf(action.oldFoodCentre);
     const newState = [...state];
     newState[index].name = editedFoodCentre.name;
     newState[index].numberOfStalls = editedFoodCentre.numberOfStalls;
@@ -80,6 +82,16 @@ const stallReducer = (state = [], action) => {
     });
   }
 
+  if (action.type == EDIT_STALL) {
+    const editedStall = action.payload;
+    const index = state.indexOf(action.oldStall);
+    const newState = [...state];
+    newState[index].name = editedStall.name;
+    newState[index].parentKey = editedStall.parentKey;
+
+    return newState;
+  }
+
   return state;
 };
 
@@ -98,6 +110,18 @@ const menuReducer = (state = [], action) => {
         value.name !== action.payload.name && value.key !== action.payload.key
       );
     });
+  }
+
+  if (action.type == EDIT_MENU) {
+    const editedMenu = action.payload;
+    const index = state.indexOf(action.oldMenu);
+    const newState = [...state];
+    newState[index].name = editedMenu.name;
+    newState[index].parentKey = editedMenu.parentKey;
+    newState[index].price = editedMenu.price;
+    newState[index].description = editedMenu.description;
+
+    return newState;
   }
   return state;
 };

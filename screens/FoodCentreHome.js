@@ -5,14 +5,18 @@ import { globalstyles } from "../styles/globalstyles";
 import { connect } from "react-redux";
 import { deleteFoodCentresData, FOODCENTRE_USER } from "../app-redux/actions";
 import { addPatronSearchHistory } from "../app-redux/historyActions";
+import { PATRON_USER } from "../app-redux/actions";
 
 class FoodCentreHome extends React.Component {
   componentDidMount() {
     const foodCentreName = this.props.route.params.name;
+    const { user } = this.props;
     this.props.navigation.setOptions({
       title: foodCentreName,
     });
-    this.props.addPatronSearchHistory(foodCentreName);
+    if (user.type == PATRON_USER) {
+      this.props.addPatronSearchHistory(foodCentreName);
+    }
   }
 
   // delete this foodCentre from database

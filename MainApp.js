@@ -18,6 +18,10 @@ import ForgotPasswordScreen from "./screens/auth/ForgotPasswordScreen";
 import AddFCScreen from "./screens/AddFCScreen";
 import FCOwnerPersonalList from "./screens/FCOwnerPersonalList";
 import EditFCScreen from "./screens/EditFCScreen";
+import AddStallNMenuScreen from "./screens/AddStallNMenuScreen";
+import FCStallMenuPersonalList from "./screens/FCStallMenuPersonalList";
+import EditStallScreen from "./screens/EditStallScreen";
+import EditMenuScreen from "./screens/EditMenuScreen";
 import {
   FOODCENTRE_USER,
   STALL_USER,
@@ -191,6 +195,26 @@ const Main = (props) => (
           name="Edit Food Centre"
           component={EditFCScreen}
           options={{ title: "Edit Food Centre" }}
+        />
+        <ScreenStack.Screen
+          name="Add Stall and Menu"
+          component={AddStallNMenuScreen}
+          options={{ title: "Add Stall and Menu" }}
+        />
+        <ScreenStack.Screen
+          name="Menu Personal List"
+          component={FCStallMenuPersonalList}
+          options={{ title: "Stall Owner" }}
+        />
+        <ScreenStack.Screen
+          name="Edit Stall"
+          component={EditStallScreen}
+          options={{ title: "Edit Stall" }}
+        />
+        <ScreenStack.Screen
+          name="Edit Menu"
+          component={EditMenuScreen}
+          options={{ title: "Edit Menu" }}
         />
       </ScreenStack.Navigator>
     </NavigationContainer>

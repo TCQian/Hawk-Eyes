@@ -8,14 +8,18 @@ import { addCreatedFoodCentre } from "../app-redux/historyActions";
 
 class EditFCScreen extends React.Component {
   handleSubmit = (formState) => {
-    this.props.editFoodCentresData({
+    const newFoodCentre = {
       name: formState.name,
       numberOfStalls: formState.numberOfStalls,
       capacity: formState.capacity,
       address: formState.address,
       key: formState.key,
       createdBy: formState.createdBy,
-    });
+    };
+    this.props.editFoodCentresData([
+      this.props.route.params.foodCentre,
+      newFoodCentre,
+    ]);
     this.props.navigation.navigate("Search");
   };
 
