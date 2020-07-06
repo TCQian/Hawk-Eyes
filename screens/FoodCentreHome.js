@@ -31,9 +31,7 @@ class FoodCentreHome extends React.Component {
         <TouchableOpacity
           onPress={() =>
             this.props.navigation.navigate("Seats", {
-              foodCentreName: this.props.route.params.name,
-              foodCentreArrayIndex: this.props.route.params
-                .foodCentreArrayIndex,
+              foodCentre: this.props.route.params.foodCentre,
             })
           }
         >

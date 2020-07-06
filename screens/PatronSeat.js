@@ -9,33 +9,32 @@ import { PATRON_USER } from "../app-redux/actions";
 class PatronSeat extends React.Component {
   componentDidMount() {
     this.props.navigation.setOptions({
-      title: this.props.route.params.foodCentreName,
+      title: this.props.route.params.foodCentre.name,
     });
   }
 
   seats() {
     return getItemsByName(
       this.props.foodCentres,
-      this.props.route.params.foodCentreName
+      this.props.route.params.foodCentre.name
     )[0].capacity;
   }
 
   render() {
-    const index = this.props.route.params.foodCentreArrayIndex;
     const { user } = this.props;
-    console.log(index);
+    const { foodCentre } = this.props.route.params;
     return (
       <View>
-        <Text>Seats: {this.seats()}</Text>
+        <Text>Available Seats: {this.seats()}</Text>
         {user.userType == PATRON_USER ? (
           <View>
             <Button
               title="Book Seat"
-              onPress={() => this.props.bookSeat(index)}
+              onPress={() => this.props.bookSeat(foodCentre)}
             />
             <Button
               title="Unbook Seat"
-              onPress={() => this.props.unbookSeat(index)}
+              onPress={() => this.props.unbookSeat(foodCentre)}
             />
           </View>
         ) : null}
@@ -53,8 +52,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    bookSeat: (index) => dispatch(bookSeat(index)),
-    unbookSeat: (index) => dispatch(unbookSeat(index)),
+    bookSeat: (foodCentre) => dispatch(bookSeat(foodCentre)),
+    unbookSeat: (foodCentre) => dispatch(unbookSeat(foodCentre)),
   };
 };
 

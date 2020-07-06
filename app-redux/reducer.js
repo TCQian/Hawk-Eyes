@@ -54,12 +54,15 @@ const foodCentreReducer = (state = [], action) => {
 
   if (action.type == BOOK_SEAT) {
     const newState = [...state];
-    newState[action.index].capacity -= 1;
+    const index = state.indexOf(action.foodCentre);
+    newState[index].capacity -= 1;
     return newState;
   }
   if (action.type == UNBOOK_SEAT) {
     const newState = [...state];
-    newState[action.index].capacity += 1;
+    const index = state.indexOf(action.foodCentre);
+
+    newState[index].capacity += 1;
     return newState;
   }
   return state;

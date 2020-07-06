@@ -5,60 +5,54 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  TextInput,
 } from "react-native";
 import { globalstyles } from "../styles/globalstyles";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { deleteFoodCentresData } from "../app-redux/actions";
 
-class FCOwnerPersonalList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+function FCOwnerPersonalList(props) {
+  const uid = props.user.userId;
+  const createdFoodCentres = props.foodCentres.filter((foodCentre) => {
+    return foodCentre.createdBy === uid;
+  });
+  const { navigation } = props;
 
-  render() {
-    const uid = this.props.user.userId;
-    const createdFoodCentres = this.props.foodCentres.filter((foodCentre) => {
-      return foodCentre.createdBy === uid;
-    });
-
-    return createdFoodCentres.length !== 0 ? (
-      <View>
-        <FlatList
-          data={createdFoodCentres}
-          renderItem={({ item }) => (
-            <TouchableOpacity>
-              <View style={styles.card}>
-                <Text style={styles.title}>{item.name}</Text>
-                <View style={styles.setting}>
-                  <MaterialIcons
-                    name="delete"
-                    size={30}
-                    style={styles.icon}
-                    onPress={() => this.props.deleteFoodCentresData(item)}
-                  />
-                  <AntDesign
-                    name="edit"
-                    size={30}
-                    onPress={() =>
-                      this.props.navigation.navigate("Edit Food Centre", {
-                        foodCentre: item,
-                      })
-                    }
-                  />
-                </View>
+  return createdFoodCentres.length !== 0 ? (
+    <View>
+      <FlatList
+        data={createdFoodCentres}
+        renderItem={({ item }) => (
+          <TouchableOpacity>
+            <View style={styles.card}>
+              <Text style={styles.title}>{item.name}</Text>
+              <View style={styles.setting}>
+                <MaterialIcons
+                  name="delete"
+                  size={30}
+                  style={styles.icon}
+                  onPress={() => props.deleteFoodCentresData(item)}
+                />
+                <AntDesign
+                  name="edit"
+                  size={30}
+                  onPress={() =>
+                    navigation.navigate("Edit Food Centre", {
+                      foodCentre: item,
+                    })
+                  }
+                />
               </View>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    ) : (
-      <View>
-        <Text style={globalstyles.title}>Your Food Centres List is empty</Text>
-      </View>
-    );
-  }
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  ) : (
+    <View>
+      <Text style={globalstyles.title}>Your Food Centres List is empty</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

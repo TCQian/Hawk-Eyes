@@ -9,6 +9,7 @@ import {
   editMenusData,
 } from "../app-redux/actions";
 import { getItemsByName, getParentsByParentKey } from "../functions/functions";
+import { Menu } from "react-native-paper";
 
 class EditStallScreen extends React.Component {
   state = {
@@ -26,7 +27,14 @@ class EditStallScreen extends React.Component {
   componentDidMount() {
     //stall existed when the componenet was mounted
     //means it was navigated from edit button
-    const { stall } = this.props.route.params;
+    const { stall, isAddMenu } = this.props.route.params;
+
+    if (isAddMenu) {
+      this.props.navigation.setOptions({
+        title: "Add Menu",
+      });
+    }
+
     const foodCentre = getParentsByParentKey(
       this.props.foodCentres,
       stall.parentKey
@@ -140,7 +148,7 @@ class EditStallScreen extends React.Component {
   };
 
   render() {
-    const { stall, menu } = this.props.route.params;
+    const { stall, menu, isAddMenu } = this.props.route.params;
 
     return (
       <View style={styles.container}>
@@ -157,11 +165,13 @@ class EditStallScreen extends React.Component {
           placeholder="Name Of The Stall"
         />
 
-        <Button
-          title="Save Changes"
-          onPress={this.handleEditStall}
-          disabled={!this.state.isStallFormValid}
-        />
+        {isAddMenu ? null : (
+          <Button
+            title="Save Changes"
+            onPress={this.handleEditStall}
+            disabled={!this.state.isStallFormValid}
+          />
+        )}
 
         <TextInput
           style={styles.input}

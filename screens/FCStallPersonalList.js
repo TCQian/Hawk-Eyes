@@ -5,89 +5,61 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  TextInput,
-  Button,
 } from "react-native";
 import { globalstyles } from "../styles/globalstyles";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { deleteStallsData } from "../app-redux/actions";
 
-class FCStallPersonalList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+function FCStallPersonalList(props) {
+  const uid = props.user.userId;
+  const createdStalls = props.stalls.filter((stall) => {
+    return stall.createdBy === uid;
+  });
+  const { navigation } = props;
 
-  componentDidMount() {
-    this.props.navigation.setOptions({
-      headerRight: () => {
-        return (
-          <View>
-            <Text onPress={() => this.handlePress()}>+</Text>
-          </View>
-        );
-      },
-    });
-  }
-
-  handlePress() {
-    this.props.navigation.navigate("Add Stall and Menu");
-  }
-
-  render() {
-    const uid = this.props.user.userId;
-    const createdStalls = this.props.stalls.filter((stall) => {
-      return stall.createdBy === uid;
-    });
-
-    return createdStalls.length !== 0 ? (
-      <View>
-        <Text onPress={() => this.handlePress()}>Add new stall</Text>
-
-        <FlatList
-          data={createdStalls}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate("Menu Personal List", {
-                  stall: item,
-                });
-              }}
-            >
-              <View style={styles.card}>
-                <Text style={styles.title}>{item.name}</Text>
-                <View style={styles.setting}>
-                  <MaterialIcons
-                    name="delete"
-                    size={30}
-                    style={styles.icon}
-                    onPress={() => this.props.deleteStallsData(item)}
-                  />
-                  <AntDesign
-                    name="edit"
-                    size={30}
-                    onPress={() =>
-                      this.props.navigation.navigate("Edit Stall", {
-                        stall: item,
-                      })
-                    }
-                  />
-                </View>
+  return createdStalls.length !== 0 ? (
+    <View>
+      <FlatList
+        data={createdStalls}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Menu Personal List", {
+                stall: item,
+              });
+            }}
+          >
+            <View style={styles.card}>
+              <Text style={styles.title}>{item.name}</Text>
+              <View style={styles.setting}>
+                <MaterialIcons
+                  name="delete"
+                  size={30}
+                  style={styles.icon}
+                  onPress={() => props.deleteStallsData(item)}
+                />
+                <AntDesign
+                  name="edit"
+                  size={30}
+                  onPress={() =>
+                    navigation.navigate("Edit Stall", {
+                      stall: item,
+                      isAddMenu: false,
+                    })
+                  }
+                />
               </View>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    ) : (
-      <View>
-        <TouchableOpacity onPress={() => this.handlePress()}>
-          <Text> Add new stall</Text>
-        </TouchableOpacity>
-
-        <Text style={globalstyles.title}>Your Stalls List is empty</Text>
-      </View>
-    );
-  }
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  ) : (
+    <View>
+      <Text style={globalstyles.title}>Your Stalls List is empty</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -19,6 +19,7 @@ import AddFCScreen from "./screens/AddFCScreen";
 import FCOwnerPersonalList from "./screens/FCOwnerPersonalList";
 import EditFCScreen from "./screens/EditFCScreen";
 import AddStallNMenuScreen from "./screens/AddStallNMenuScreen";
+import FCStallPersonalList from "./screens/FCStallPersonalList";
 import FCStallMenuPersonalList from "./screens/FCStallMenuPersonalList";
 import EditStallScreen from "./screens/EditStallScreen";
 import EditMenuScreen from "./screens/EditMenuScreen";
@@ -175,6 +176,12 @@ const Main = (props) => (
           component={FoodCentreHome}
           options={{ title: "Food Centre Details" }}
         />
+
+        <ScreenStack.Screen
+          name="Add Food Centre"
+          component={AddFCScreen}
+          options={{ title: "Add Food Centre" }}
+        />
         <ScreenStack.Screen
           name="Seats"
           component={PatronSeat}
@@ -184,6 +191,12 @@ const Main = (props) => (
           name="Stalls"
           component={PatronStall}
           options={{ title: "Stalls" }}
+        />
+
+        <ScreenStack.Screen
+          name="Stall Personal List"
+          component={FCStallPersonalList}
+          options={{ title: "My Stall List" }}
         />
         <ScreenStack.Screen
           name="Menu"
@@ -204,7 +217,7 @@ const Main = (props) => (
         <ScreenStack.Screen
           name="Menu Personal List"
           component={FCStallMenuPersonalList}
-          options={{ title: "Stall Owner" }}
+          options={{ title: "My Menu List" }}
         />
         <ScreenStack.Screen
           name="Edit Stall"

@@ -18,8 +18,6 @@ class PatronFoodCentre extends React.Component {
   }
 
   render() {
-    let c = 0;
-
     return (
       <View>
         <View style={styles.searchBar}>
@@ -47,7 +45,6 @@ class PatronFoodCentre extends React.Component {
                 this.props.navigation.navigate("FoodCentreHome", {
                   name: item.name,
                   foodCentre: item,
-                  foodCentreArrayIndex: c++,
                 })
               }
             >

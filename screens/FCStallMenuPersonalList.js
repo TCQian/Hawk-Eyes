@@ -12,75 +12,70 @@ import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { deleteMenusData } from "../app-redux/actions";
 
-class FCStallMenuPersonalLink extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    this.props.navigation.setOptions({
-      title: this.props.route.params.stall.name,
+function FCStallMenuPersonalList(props) {
+  const uid = props.user.userId;
+  const stall = props.route.params.stall;
+  const createdMenus = props.menus
+    .filter((menu) => {
+      return menu.createdBy === uid;
+    })
+    .filter((menu) => {
+      return menu.parentKey === stall.key;
     });
-  }
+  const { navigation } = props;
 
-  handlePress() {
-    this.props.navigation.navigate("Add Stall and Menu", {
-      stall: this.props.route.params.stall,
-    });
-  }
-
-  render() {
-    const uid = this.props.user.userId;
-    const stall = this.props.route.params.stall;
-    const createdMenus = this.props.menus
-      .filter((menu) => {
-        return menu.createdBy === uid;
-      })
-      .filter((menu) => {
-        return menu.parentKey === stall.key;
-      });
-
-    return createdMenus.length !== 0 ? (
-      <View>
-        <Text onPress={() => this.handlePress()}>Add new menu</Text>
-
-        <FlatList
-          data={createdMenus}
-          renderItem={({ item }) => (
-            <TouchableOpacity>
-              <View style={styles.card}>
-                <Text style={styles.title}>{item.name}</Text>
-                <View style={styles.setting}>
-                  <MaterialIcons
-                    name="delete"
-                    size={30}
-                    style={styles.icon}
-                    onPress={() => this.props.deleteMenusData(item)}
-                  />
-                  <AntDesign
-                    name="edit"
-                    size={30}
-                    onPress={() =>
-                      this.props.navigation.navigate("Edit Menu", {
-                        stall: stall,
-                        menu: item,
-                      })
-                    }
-                  />
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <MaterialIcons
+          name="add"
+          size={30}
+          style={globalstyles.addIcon}
+          onPress={() =>
+            navigation.navigate("Edit Stall", { stall, isAddMenu: true })
+          }
         />
-      </View>
-    ) : (
-      <View>
-        <Text onPress={() => this.handlePress()}>Add new menu</Text>
+      ),
+      title: props.route.params.stall.name,
+    });
+  }, [navigation]);
 
-        <Text style={globalstyles.title}>Your Menus List is empty</Text>
-      </View>
-    );
-  }
+  return createdMenus.length !== 0 ? (
+    <View>
+      <FlatList
+        data={createdMenus}
+        renderItem={({ item }) => (
+          <TouchableOpacity>
+            <View style={styles.card}>
+              <Text style={styles.title}>{item.name}</Text>
+              <View style={styles.setting}>
+                <MaterialIcons
+                  name="delete"
+                  size={30}
+                  style={styles.icon}
+                  onPress={() => props.deleteMenusData(item)}
+                />
+                <AntDesign
+                  name="edit"
+                  size={30}
+                  onPress={() =>
+                    navigation.navigate("Edit Menu", {
+                      stall: stall,
+                      menu: item,
+                    })
+                  }
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  ) : (
+    <View>
+      <Text style={globalstyles.title}>Your Menus List is empty</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -123,4 +118,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FCStallMenuPersonalLink);
+)(FCStallMenuPersonalList);
