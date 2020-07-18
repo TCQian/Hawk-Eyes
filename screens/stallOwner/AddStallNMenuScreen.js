@@ -7,10 +7,12 @@ import {
   updateMenusData,
   editStallsData,
   editMenusData,
-} from "../app-redux/actions";
-import { getItemsByName, getParentsByParentKey } from "../functions/functions";
+} from "../../app-redux/actions";
+import { getItemsByName, getItemsByParentKey } from "../../functions/functions";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 
-class EditMenuScreen extends React.Component {
+class AddStallNMenuScreen extends React.Component {
   state = {
     fcName: "",
     stallName: "",
@@ -19,33 +21,9 @@ class EditMenuScreen extends React.Component {
     price: "",
     isStallFormValid: false,
     isMenuFormValid: false,
-    stallParentKey: NaN,
-    menuParentKey: NaN,
+    stallParentId: NaN,
+    menuParentId: NaN,
   };
-
-  componentDidMount() {
-    //stall existed when the componenet was mounted
-    //means it was navigated from edit button
-    const { stall, menu } = this.props.route.params;
-    const foodCentre = getParentsByParentKey(
-      this.props.foodCentres,
-      stall.parentKey
-    );
-
-    console.log(stall);
-    this.setState({
-      fcName: foodCentre[0].name,
-      stallName: stall.name,
-      stallParentKey: stall.parentKey,
-    });
-
-    this.setState({
-      menuName: menu.name,
-      description: menu.description,
-      price: menu.price,
-      menuParentKey: menu.parentKey,
-    });
-  }
 
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -67,7 +45,7 @@ class EditMenuScreen extends React.Component {
     const stall = getItemsByName(
       this.props.stalls,
       this.state.stallName
-    ).filter((item) => item.parentKey === foodCentre[0].key);
+    ).filter((item) => item.parentId === foodCentre[0].id);
 
     if (
       // Food Centre exists, stall to be added
@@ -77,7 +55,7 @@ class EditMenuScreen extends React.Component {
     ) {
       this.setState({
         isStallFormValid: true,
-        stallParentKey: foodCentre[0].key,
+        stallParentId: foodCentre[0].id,
       });
     } else {
       this.setState({ isStallFormValid: false });
@@ -93,7 +71,7 @@ class EditMenuScreen extends React.Component {
     ) {
       this.setState({
         isMenuFormValid: true,
-        menuParentKey: stall[0].key,
+        menuParentId: stall[0].id,
       });
     } else {
       this.setState({ isMenuFormValid: false });
@@ -104,31 +82,23 @@ class EditMenuScreen extends React.Component {
     this.setState({ [key]: val });
   };
 
-  handleEditStall = () => {
-    const { stall } = this.props.route.params;
-    this.props.editStallsData([
-      stall,
-      {
-        name: this.state.stallName,
-        parentKey: this.state.stallParentKey,
-        key: this.props.route.params.stall.key,
-        createdBy: this.props.route.params.stall.createdBy,
-      },
-    ]);
+  handleCreateStall = () => {
+    this.props.updateStallsData({
+      name: this.state.stallName,
+      parentId: this.state.stallParentId,
+      createdBy: this.props.user.userId,
+    });
+    this.setState({ isStallFormValid: false });
   };
 
-  handleEditMenu = () => {
-    this.props.editMenusData([
-      this.props.route.params.menu,
-      {
-        name: this.state.menuName,
-        parentKey: this.state.menuParentKey,
-        description: this.state.description,
-        price: this.state.price,
-        key: this.props.route.params.menu.key,
-        createdBy: this.props.route.params.menu.createdBy,
-      },
-    ]);
+  handleCreateMenu = () => {
+    this.props.updateMenusData({
+      name: this.state.menuName,
+      description: this.state.description,
+      price: this.state.price,
+      parentId: this.state.menuParentId,
+      createdBy: this.props.user.userId,
+    });
 
     this.setState({
       menuName: "",
@@ -144,15 +114,13 @@ class EditMenuScreen extends React.Component {
       menuName: "",
       description: "",
       price: "",
-      stallParentKey: "",
-      menuParentKey: "",
+      stallParentId: "",
+      menuParentId: "",
     });
     this.props.navigation.navigate("Search");
   };
 
   render() {
-    const { stall, menu } = this.props.route.params;
-
     return (
       <View style={styles.container}>
         <TextInput
@@ -169,9 +137,9 @@ class EditMenuScreen extends React.Component {
         />
 
         <Button
-          title="Save Changes"
-          onPress={this.handleEditStall}
-          disabled={true}
+          title="Create Stall"
+          onPress={this.handleCreateStall}
+          disabled={!this.state.isStallFormValid}
         />
 
         <TextInput
@@ -194,8 +162,8 @@ class EditMenuScreen extends React.Component {
         />
 
         <Button
-          title="Save Changes"
-          onPress={this.handleEditMenu}
+          title="Create Menu"
+          onPress={this.handleCreateMenu}
           disabled={!this.state.isMenuFormValid}
         />
 
@@ -226,15 +194,22 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  foodCentres: state.foodCentres,
-  stalls: state.stalls,
-  menus: state.menus,
+  foodCentres: state.firestore.ordered.foodCentres,
+  stalls: state.firestore.ordered.stalls,
+  menus: state.firestore.ordered.menus,
   user: state.user,
 });
 
-export default connect(mapStateToProps, {
-  updateStallsData,
-  updateMenusData,
-  editStallsData,
-  editMenusData,
-})(EditMenuScreen);
+export default compose(
+  connect(mapStateToProps, {
+    updateStallsData,
+    updateMenusData,
+    editStallsData,
+    editMenusData,
+  }),
+  firestoreConnect([
+    { collection: "foodCentres", orderBy: ["name", "asc"] },
+    { collection: "stalls", orderBy: ["name", "asc"] },
+    { collection: "menus", orderBy: ["name", "asc"] },
+  ])
+)(AddStallNMenuScreen);

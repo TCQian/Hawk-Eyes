@@ -1,4 +1,4 @@
-import db from "../firebase/firebaseConfig";
+import { db } from "../firebase/firebaseConfig";
 import * as firebase from "firebase";
 
 export const BOOK_SEAT = "BOOK_SEAT";

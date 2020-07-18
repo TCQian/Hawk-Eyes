@@ -6,10 +6,12 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { globalstyles } from "../styles/globalstyles";
+import { globalstyles } from "../../styles/globalstyles";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
-import { deleteFoodCentresData } from "../app-redux/actions";
+import { deleteFoodCentresData } from "../../app-redux/actions";
+import { compose } from "redux";
+import { firestoreConnect } from "react-redux-firebase";
 
 function FCOwnerPersonalList(props) {
   const uid = props.user.userId;
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  foodCentres: state.foodCentres,
+  foodCentres: state.firestore.ordered.foodCentres,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -93,7 +95,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "foodCentres", orderBy: ["name", "asc"] }])
 )(FCOwnerPersonalList);

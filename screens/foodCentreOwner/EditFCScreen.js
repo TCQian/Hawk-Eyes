@@ -2,23 +2,22 @@ import React from "react";
 import { connect } from "react-redux";
 import { Button, StyleSheet, TextInput, View } from "react-native";
 import Constants from "expo-constants";
-import { getItemsByName } from "../functions/functions";
-import { editFoodCentresData } from "../app-redux/actions";
-import { addCreatedFoodCentre } from "../app-redux/historyActions";
+import { getItemsByName } from "../../functions/functions";
+import { editFoodCentresData } from "../../app-redux/actions";
+import { addCreatedFoodCentre } from "../../app-redux/historyActions";
 
 class EditFCScreen extends React.Component {
   handleSubmit = (formState) => {
-    const newFoodCentre = {
+    const updatedFoodCentre = {
       name: formState.name,
       numberOfStalls: formState.numberOfStalls,
       capacity: formState.capacity,
       address: formState.address,
-      key: formState.key,
       createdBy: formState.createdBy,
     };
     this.props.editFoodCentresData([
-      this.props.route.params.foodCentre,
-      newFoodCentre,
+      this.props.route.params.foodCentre.id,
+      updatedFoodCentre,
     ]);
     this.props.navigation.navigate("Search");
   };
@@ -27,7 +26,6 @@ class EditFCScreen extends React.Component {
     return (
       <EditFCForm
         onSubmit={this.handleSubmit}
-        foodCentres={this.props.foodCentres}
         foodCentre={this.props.route.params.foodCentre}
       />
     );
@@ -40,7 +38,6 @@ class EditFCForm extends React.Component {
     numberOfStalls: this.props.foodCentre.numberOfStalls,
     capacity: this.props.foodCentre.capacity,
     address: this.props.foodCentre.address,
-    key: this.props.foodCentre.key,
     createdBy: this.props.foodCentre.createdBy,
     isFormValid: true,
   };
@@ -138,8 +135,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  foodCentres: state.foodCentres,
   user: state.user,
+  profile: state.firebase.profile,
 });
 
 const mapDispatchToProps = (dispatch) => {

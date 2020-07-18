@@ -15,8 +15,8 @@ export const getItemsByName = (listOfItems, itemName) => {
  * the item with given parent key exists inside the list of items.
  * For example: get stalls, get menus
  */
-export const getItemsByParentKey = (listOfItems, itemParentKey) => {
-  const result = listOfItems.filter((item) => item.parentKey === itemParentKey);
+export const getItemsByParentKey = (listOfItems, itemParentId) => {
+  const result = listOfItems.filter((item) => item.parentId === itemParentId);
   return [...result];
 };
 
@@ -25,7 +25,7 @@ export const getItemsByParentKey = (listOfItems, itemParentKey) => {
  * return the parent taht has the parent KEy
  * */
 
-export const getParentsByParentKey = (listOfItems, itemParentKey) => {
-  const result = listOfItems.filter((data) => data.key === itemParentKey);
+export const getParentsByParentKey = (listOfItems, itemParentId) => {
+  const result = listOfItems.filter((data) => data.id === itemParentId);
   return [...result];
 };

@@ -6,10 +6,12 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { globalstyles } from "../styles/globalstyles";
+import { globalstyles } from "../../styles/globalstyles";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
-import { deleteStallsData } from "../app-redux/actions";
+import { deleteStallsData } from "../../app-redux/actions";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 
 function FCStallPersonalList(props) {
   const uid = props.user.userId;
@@ -37,7 +39,7 @@ function FCStallPersonalList(props) {
                   name="delete"
                   size={30}
                   style={styles.icon}
-                  onPress={() => props.deleteStallsData(item)}
+                  onPress={() => props.deleteStallsData(item.id)}
                 />
                 <AntDesign
                   name="edit"
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  stalls: state.stalls,
+  stalls: state.firestore.ordered.stalls,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -99,7 +101,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "stalls", orderBy: ["name", "asc"] }])
 )(FCStallPersonalList);

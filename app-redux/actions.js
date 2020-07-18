@@ -1,4 +1,4 @@
-import db from "../firebase/firebaseConfig";
+import { db } from "../firebase/firebaseConfig";
 import * as firebase from "firebase";
 
 export const UPDATE_FOODCENTRE = "UPDATE_FOODCENTRE";
@@ -21,51 +21,39 @@ export const PATRON_USER = "PATRON_USER";
 
 //Action Creator
 // Update store
-export const addFoodCentre = (newFoodCentre) => ({
+export const addFoodCentre = () => ({
   type: UPDATE_FOODCENTRE,
-  payload: newFoodCentre,
 });
 
-export const deleteFoodCentre = (foodCentre) => ({
+export const deleteFoodCentre = () => ({
   type: DELETE_FOODCENTRE,
-  payload: foodCentre,
 });
 
-export const editFoodCentre = (oldFoodCentre, foodCentre) => ({
+export const editFoodCentre = () => ({
   type: EDIT_FOODCENTRE,
-  payload: foodCentre,
-  oldFoodCentre,
 });
 
-export const addStall = (newStall) => ({
+export const addStall = (l) => ({
   type: UPDATE_STALL,
-  payload: newStall,
 });
 
-export const deleteStall = (stall) => ({
+export const deleteStall = () => ({
   type: DELETE_STALL,
-  payload: stall,
 });
 
-export const editStall = (oldStall, stall) => ({
+export const editStall = () => ({
   type: EDIT_STALL,
-  payload: stall,
-  oldStall,
 });
 
-export const addMenu = (newMenu) => ({
+export const addMenu = () => ({
   type: UPDATE_MENU,
-  payload: newMenu,
 });
-export const deleteMenu = (menu) => ({
+export const deleteMenu = () => ({
   type: DELETE_MENU,
-  payload: menu,
 });
 
-export const editMenu = (oldMenu, menu) => ({
+export const editMenu = () => ({
   type: EDIT_MENU,
-  payload: menu,
-  oldMenu,
 });
 // database - foodCentres
 export const setFoodCentresData = (foodCentres) => ({
@@ -75,8 +63,8 @@ export const setFoodCentresData = (foodCentres) => ({
 
 export const watchFoodCentresData = () => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
+    db.collection("foodCentres")
+      .doc()
       .get()
       .then(function (doc) {
         const { foodCentres } = doc.data();
@@ -91,14 +79,11 @@ export const watchFoodCentresData = () => {
 // this will append a single foodCentre into database foodCentres list
 export const updateFoodCentresData = (foodCentre) => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .update({
-        foodCentres: firebase.firestore.FieldValue.arrayUnion(foodCentre),
-      })
+    db.collection("foodCentres")
+      .add(foodCentre)
       .then(function () {
         // this dispatch will update react store.
-        dispatch(addFoodCentre(foodCentre));
+        dispatch(addFoodCentre());
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -109,14 +94,12 @@ export const updateFoodCentresData = (foodCentre) => {
 // this will remove a single foodCentre from database foodCentres list
 export const deleteFoodCentresData = (foodCentre) => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .update({
-        foodCentres: firebase.firestore.FieldValue.arrayRemove(foodCentre),
-      })
+    db.collection("foodCentres")
+      .doc(foodCentre.id)
+      .delete()
       .then(function () {
         // this dispatch will update react store.
-        dispatch(deleteFoodCentre(foodCentre));
+        dispatch(deleteFoodCentre());
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -126,42 +109,13 @@ export const deleteFoodCentresData = (foodCentre) => {
 
 // this will edit a particular foodCentre from database foodCentres list
 export const editFoodCentresData = (arr) => {
+  const id = arr[0];
+  const updatedFoodCentre = arr[1];
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .get()
-      .then((doc) => {
-        const { foodCentres, menus, stalls } = doc.data();
-        const foodCentre = arr[1];
-        const oldFoodCentre = arr[0];
-
-        const index = foodCentres.findIndex((item) => {
-          return isEquivalent(item, oldFoodCentre);
-        });
-
-        foodCentres[index].name = foodCentre.name;
-        foodCentres[index].numberOfStalls = foodCentre.numberOfStalls;
-        foodCentres[index].capacity = foodCentre.capacity;
-        foodCentres[index].address = foodCentre.address;
-
-        const newFoodCentres = foodCentres.map((obj) => {
-          return Object.assign({}, obj);
-        });
-
-        db.collection("Database")
-          .doc("F8ZKbAihxgnysKPDSP3L")
-          .update({
-            foodCentres: newFoodCentres,
-            menus,
-            stalls,
-          })
-          .then(function () {
-            dispatch(editFoodCentre(oldFoodCentre, foodCentre));
-          })
-          .catch(function (error) {
-            console.error("Error writing document: ", error);
-          });
-      })
+    db.collection("foodCentres")
+      .doc(id)
+      .set(updatedFoodCentre)
+      .then(dispatch(editFoodCentre()))
       .catch(function (error) {
         console.error("Error writing document: ", error);
       });
@@ -176,8 +130,8 @@ export const setStallsData = (stalls) => ({
 
 export const watchStallsData = () => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
+    db.collection("stalls")
+      .doc()
       .get()
       .then(function (doc) {
         const { stalls } = doc.data();
@@ -191,14 +145,11 @@ export const watchStallsData = () => {
 
 export const updateStallsData = (stall) => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .update({
-        stalls: firebase.firestore.FieldValue.arrayUnion(stall),
-      })
+    db.collection("stalls")
+      .add(stall)
       .then(function () {
         // this dispatch will update react store.
-        dispatch(addStall(stall));
+        dispatch(addStall());
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -206,16 +157,14 @@ export const updateStallsData = (stall) => {
   };
 };
 
-export const deleteStallsData = (stall) => {
+export const deleteStallsData = (id) => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .update({
-        stalls: firebase.firestore.FieldValue.arrayRemove(stall),
-      })
+    db.collection("stalls")
+      .doc(id)
+      .delete()
       .then(function () {
         // this dispatch will update react store.
-        dispatch(deleteStall(stall));
+        dispatch(deleteStall());
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -224,39 +173,13 @@ export const deleteStallsData = (stall) => {
 };
 
 export const editStallsData = (arr) => {
+  const id = arr[0];
+  const updatedStall = arr[1];
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .get()
-      .then((doc) => {
-        const { foodCentres, menus, stalls } = doc.data();
-        const oldStall = arr[0];
-        const stall = arr[1];
-        const index = stalls.findIndex((item) => {
-          return isEquivalent(item, oldStall);
-        });
-
-        stalls[index].name = stall.name;
-        stalls[index].parentKey = stall.parentKey;
-
-        const newStalls = stalls.map((obj) => {
-          return Object.assign({}, obj);
-        });
-
-        db.collection("Database")
-          .doc("F8ZKbAihxgnysKPDSP3L")
-          .update({
-            foodCentres,
-            menus,
-            stalls: newStalls,
-          })
-          .then(function () {
-            dispatch(editStall(oldStall, stall));
-          })
-          .catch(function (error) {
-            console.error("Error writing document: ", error);
-          });
-      })
+    db.collection("stalls")
+      .doc(id)
+      .set(updatedStall)
+      .then(dispatch(editStall()))
       .catch(function (error) {
         console.error("Error writing document: ", error);
       });
@@ -271,8 +194,8 @@ export const setMenusData = (menus) => ({
 
 export const watchMenusData = () => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
+    db.collection("menus")
+      .doc()
       .get()
       .then(function (doc) {
         const { menus } = doc.data();
@@ -286,14 +209,11 @@ export const watchMenusData = () => {
 
 export const updateMenusData = (menu) => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .update({
-        menus: firebase.firestore.FieldValue.arrayUnion(menu),
-      })
+    db.collection("menus")
+      .add(menu)
       .then(function () {
         // this dispatch will update react store.
-        dispatch(addMenu(menu));
+        dispatch(addMenu());
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -301,16 +221,14 @@ export const updateMenusData = (menu) => {
   };
 };
 
-export const deleteMenusData = (menu) => {
+export const deleteMenusData = (id) => {
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .update({
-        menus: firebase.firestore.FieldValue.arrayRemove(menu),
-      })
+    db.collection("menus")
+      .doc(id)
+      .delete()
       .then(function () {
         // this dispatch will update react store.
-        dispatch(deleteMenu(menu));
+        dispatch(deleteMenu());
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
@@ -319,41 +237,13 @@ export const deleteMenusData = (menu) => {
 };
 
 export const editMenusData = (arr) => {
+  const id = arr[0];
+  const updatedMenu = arr[1];
   return function (dispatch) {
-    db.collection("Database")
-      .doc("F8ZKbAihxgnysKPDSP3L")
-      .get()
-      .then((doc) => {
-        const { foodCentres, menus, stalls } = doc.data();
-        const oldMenu = arr[0];
-        const menu = arr[1];
-        const index = menus.findIndex((item) => {
-          return isEquivalent(item, oldMenu);
-        });
-
-        menus[index].name = menu.name;
-        menus[index].parentKey = menu.parentKey;
-        menus[index].price = menu.price;
-        menus[index].description = menu.description;
-
-        const newMenus = menus.map((obj) => {
-          return Object.assign({}, obj);
-        });
-
-        db.collection("Database")
-          .doc("F8ZKbAihxgnysKPDSP3L")
-          .update({
-            foodCentres,
-            menus: newMenus,
-            stalls,
-          })
-          .then(function () {
-            dispatch(editMenu(oldMenu, menu));
-          })
-          .catch(function (error) {
-            console.error("Error writing document: ", error);
-          });
-      })
+    db.collection("menus")
+      .doc(id)
+      .set(updatedMenu)
+      .then(dispatch(editMenu()))
       .catch(function (error) {
         console.error("Error writing document: ", error);
       });
@@ -421,29 +311,3 @@ export const updateUserData = (user) => {
       });
   };
 };
-
-function isEquivalent(a, b) {
-  // Create arrays of property names
-  var aProps = Object.getOwnPropertyNames(a);
-  var bProps = Object.getOwnPropertyNames(b);
-
-  // If number of properties is different,
-  // objects are not equivalent
-  if (aProps.length != bProps.length) {
-    return false;
-  }
-
-  for (var i = 0; i < aProps.length; i++) {
-    var propName = aProps[i];
-
-    // If values of same property are not equal,
-    // objects are not equivalent
-    if (a[propName] !== b[propName]) {
-      return false;
-    }
-  }
-
-  // If we made it this far, objects
-  // are considered equivalent
-  return true;
-}

@@ -1,6 +1,9 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
 import reducer from "./reducer";
+import { getFirestore, reduxFirestore } from "redux-firestore";
+import { getFirebase } from "react-redux-firebase";
+import { firebaseConfig } from "../firebase/firebaseConfig";
 
 const DEFAULT_STATE = {
   foodCentres: [
@@ -95,10 +98,6 @@ const DEFAULT_STATE = {
 };
 
 //attachAuthIsReady is to make sure that the user has been logged in then render the App
-const store = createStore(
-  reducer,
-
-  applyMiddleware(thunkMiddleware)
-);
+const store = createStore(reducer, applyMiddleware(thunkMiddleware));
 
 export default store;

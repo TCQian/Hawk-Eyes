@@ -19,11 +19,13 @@ import {
   ADD_PATRON_SEARCH_HISTORY,
   ADD_CREATED_FOOD_CENTRE,
 } from "./historyActions";
+import { firebaseReducer } from "react-redux-firebase";
+import { firestoreReducer } from "redux-firestore";
 
 const foodCentreReducer = (state = [], action) => {
   // this action type is associated with database
   if (action.type == UPDATE_FOODCENTRE) {
-    return [...state, action.payload];
+    return state;
   }
 
   // this action type is associated with database
@@ -33,23 +35,11 @@ const foodCentreReducer = (state = [], action) => {
 
   // this action type is associated with database
   if (action.type == DELETE_FOODCENTRE) {
-    return state.filter(function (value, index, arr) {
-      return (
-        value.name !== action.payload.name && value.key !== action.payload.key
-      );
-    });
+    return state;
   }
 
   if (action.type == EDIT_FOODCENTRE) {
-    const editedFoodCentre = action.payload;
-    const index = state.indexOf(action.oldFoodCentre);
-    const newState = [...state];
-    newState[index].name = editedFoodCentre.name;
-    newState[index].numberOfStalls = editedFoodCentre.numberOfStalls;
-    newState[index].capacity = editedFoodCentre.capacity;
-    newState[index].address = editedFoodCentre.address;
-
-    return newState;
+    return state;
   }
 
   if (action.type == BOOK_SEAT) {
@@ -70,7 +60,7 @@ const foodCentreReducer = (state = [], action) => {
 
 const stallReducer = (state = [], action) => {
   if (action.type == UPDATE_STALL) {
-    return [...state, action.payload];
+    return state;
   }
   // this action type is associated with database
   if (action.type == SET_STALLS_DATA) {
@@ -78,21 +68,11 @@ const stallReducer = (state = [], action) => {
   }
 
   if (action.type == DELETE_STALL) {
-    return state.filter(function (value, index, arr) {
-      return (
-        value.name !== action.payload.name && value.key !== action.payload.key
-      );
-    });
+    return state;
   }
 
   if (action.type == EDIT_STALL) {
-    const editedStall = action.payload;
-    const index = state.indexOf(action.oldStall);
-    const newState = [...state];
-    newState[index].name = editedStall.name;
-    newState[index].parentKey = editedStall.parentKey;
-
-    return newState;
+    return state;
   }
 
   return state;
@@ -100,7 +80,7 @@ const stallReducer = (state = [], action) => {
 
 const menuReducer = (state = [], action) => {
   if (action.type == UPDATE_MENU) {
-    return [...state, action.payload];
+    return state;
   }
   // this action type is associated with database
   if (action.type == SET_MENUS_DATA) {
@@ -108,23 +88,11 @@ const menuReducer = (state = [], action) => {
   }
 
   if (action.type == DELETE_MENU) {
-    return state.filter(function (value, index, arr) {
-      return (
-        value.name !== action.payload.name && value.key !== action.payload.key
-      );
-    });
+    return state;
   }
 
   if (action.type == EDIT_MENU) {
-    const editedMenu = action.payload;
-    const index = state.indexOf(action.oldMenu);
-    const newState = [...state];
-    newState[index].name = editedMenu.name;
-    newState[index].parentKey = editedMenu.parentKey;
-    newState[index].price = editedMenu.price;
-    newState[index].description = editedMenu.description;
-
-    return newState;
+    return state;
   }
   return state;
 };
@@ -153,6 +121,8 @@ const reducer = combineReducers({
   stalls: stallReducer,
   menus: menuReducer,
   user: userReducer,
+  firebase: firebaseReducer,
+  firestore: firestoreReducer,
 });
 
 export default reducer;

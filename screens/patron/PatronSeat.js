@@ -1,10 +1,9 @@
 import React from "react";
 import { Text, View, Button } from "react-native";
 import { connect } from "react-redux";
-import { globalstyles } from "../styles/globalstyles";
-import { getItemsByName } from "../functions/functions";
-import { bookSeat, unbookSeat } from "../app-redux/seatsActions";
-import { PATRON_USER } from "../app-redux/actions";
+import { globalstyles } from "../../styles/globalstyles";
+import { bookSeat, unbookSeat } from "../../app-redux/seatsActions";
+import { PATRON_USER } from "../../app-redux/actions";
 
 class PatronSeat extends React.Component {
   componentDidMount() {
@@ -13,19 +12,12 @@ class PatronSeat extends React.Component {
     });
   }
 
-  seats() {
-    return getItemsByName(
-      this.props.foodCentres,
-      this.props.route.params.foodCentre.name
-    )[0].capacity;
-  }
-
   render() {
     const { user } = this.props;
     const { foodCentre } = this.props.route.params;
     return (
       <View>
-        <Text>Available Seats: {this.seats()}</Text>
+        <Text>Available Seats: {foodCentre.capacity}</Text>
         {user.userType == PATRON_USER ? (
           <View>
             <Button
@@ -39,14 +31,13 @@ class PatronSeat extends React.Component {
           </View>
         ) : null}
 
-        {!this.seats() && <Text>This Food Centre is full</Text>}
+        {!foodCentre.capacity && <Text>This Food Centre is full</Text>}
       </View>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  foodCentres: state.foodCentres,
   user: state.user,
 });
 

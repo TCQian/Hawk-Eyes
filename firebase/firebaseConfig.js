@@ -3,18 +3,17 @@ import "firebase/firestore";
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
-  apiKey: "AIzaSyDoqkSH0HbaSuu2LVgY7Zw9QrjoXsPqVYE",
-  authDomain: "hawk-eyes-2021.firebaseapp.com",
-  databaseURL: "https://hawk-eyes-2021.firebaseio.com",
-  projectId: "hawk-eyes-2021",
-  storageBucket: "hawk-eyes-2021.appspot.com",
-  messagingSenderId: "198372819473",
-  appId: "1:198372819473:web:27eb24d382b28cf403a7b0",
-  measurementId: "G-W91DEGM36B",
+  apiKey: "AIzaSyD6XjUc0P8cSUMBecm1Ex9V3d8XO9LXiTo",
+  authDomain: "hawk-eyes-86980.firebaseapp.com",
+  databaseURL: "https://hawk-eyes-86980.firebaseio.com",
+  projectId: "hawk-eyes-86980",
+  storageBucket: "hawk-eyes-86980.appspot.com",
+  messagingSenderId: "154482292262",
+  appId: "1:154482292262:web:4057b2bced0bef3de558e7",
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+export const db = firebase.firestore();
 
 // Initialize Firebase
-export default db;
+export default firebase;
