@@ -12,12 +12,29 @@ if (!global.atob) {
   global.atob = decode;
 }
 //--------------------------------------------------------------------------//
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import { createFirestoreInstance } from "redux-firestore";
+import firebase from "./firebase/firebaseConfig";
+
+const rrfConfig = {
+  userProfile: "Users",
+  useFirestoreForProfile: true,
+};
+
+const rrfProps = {
+  firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  createFirestoreInstance,
+};
 
 export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <MainApp />
+        <ReactReduxFirebaseProvider {...rrfProps}>
+          <MainApp />
+        </ReactReduxFirebaseProvider>
       </Provider>
     );
   }

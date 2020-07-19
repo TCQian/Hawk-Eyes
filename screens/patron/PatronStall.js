@@ -1,38 +1,35 @@
 import React from "react";
 import { Text, View, FlatList, TouchableOpacity, Button } from "react-native";
 import { connect } from "react-redux";
-import Card from "../styles/cards";
-import { globalstyles } from "../styles/globalstyles";
-import { getItemsByName, getItemsByParentKey } from "../functions/functions";
+import Card from "../../styles/cards";
+import { globalstyles } from "../../styles/globalstyles";
+import { getItemsByName, getItemsByParentKey } from "../../functions/functions";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 
 class PatronStall extends React.Component {
   componentDidMount() {
     this.props.navigation.setOptions({
-      title: this.props.route.params.foodCentreName,
+      title: this.props.route.params.foodCentre.name,
     });
   }
 
-  getFoodCentreKey() {
-    return getItemsByName(
-      this.props.foodCentres,
-      this.props.route.params.foodCentreName
-    )[0].key;
-  }
-
   stalls() {
-    return getItemsByParentKey(this.props.stalls, this.getFoodCentreKey());
+    return this.props.stalls.filter(
+      (stall) => stall.parentId === this.props.route.params.foodCentre.id
+    );
   }
 
   render() {
     return (
       <View>
         <FlatList
+          keyExtractor={(item) => item.id}
           data={this.stalls()}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Menu", {
-                  parentKey: item.key,
                   stall: item,
                 })
               }
@@ -48,10 +45,14 @@ class PatronStall extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  foodCentres: state.foodCentres,
-  stalls: state.stalls,
-  userType: state.userType,
-});
+const mapStateToProps = (state) => {
+  return {
+    stalls: state.firestore.ordered.stalls,
+    userType: state.userType,
+  };
+};
 
-export default connect(mapStateToProps)(PatronStall);
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([{ collection: "stalls", orderBy: ["name", "asc"] }])
+)(PatronStall);
