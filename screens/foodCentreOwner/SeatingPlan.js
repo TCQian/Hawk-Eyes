@@ -311,34 +311,7 @@ class SeatingPlan extends React.Component {
             this.setState({
                 grid: newGrid,
             });
-
-            if (c.id - 1 >= 1) {
-                const cellLeft = this.state.grid[c.id - 1];
-                if (cellLeft.nature == nature) {
-                    this.bookingCellPress(cellLeft);
-                }
-            }
-
-            if (c.id + 1 < 420) {
-                const cellRight = this.state.grid[c.id + 1];
-                if (cellRight.nature == nature) {
-                    this.bookingCellPress(cellRight);
-                }
-            }
-
-            if (c.id + 15 <= 420) {
-                const cellLower = this.state.grid[c.id + 15];
-                if (cellLower.nature == nature) {
-                    this.bookingCellPress(cellLower);
-                }
-            }
-
-            if (c.id - 15 >= 1) {
-                const cellUpper = this.state.grid[c.id - 15];
-                if (cellUpper.nature == nature) {
-                    this.bookingCellPress(cellUpper);
-                }
-            }
+            
             this.setState({
                 bookedOrReservedOnce: false,
             });
@@ -360,33 +333,6 @@ class SeatingPlan extends React.Component {
                 grid: newGrid,
             });
 
-            if (c.id - 1 >= 1) {
-                const cellLeft = this.state.grid[c.id - 1];
-                if (cellLeft.nature == nature) {
-                    this.bookingCellPress(cellLeft);
-                }
-            }
-
-            if (c.id + 1 < 420) {
-                const cellRight = this.state.grid[c.id + 1];
-                if (cellRight.nature == nature) {
-                    this.bookingCellPress(cellRight);
-                }
-            }
-
-            if (c.id + 15 <= 420) {
-                const cellLower = this.state.grid[c.id + 15];
-                if (cellLower.nature == nature) {
-                    this.bookingCellPress(cellLower);
-                }
-            }
-
-            if (c.id - 15 >= 1) {
-                const cellUpper = this.state.grid[c.id - 15];
-                if (cellUpper.nature == nature) {
-                    this.bookingCellPress(cellUpper);
-                }
-            }
             this.setState({
                 bookedOrReservedOnce: true,
             });
