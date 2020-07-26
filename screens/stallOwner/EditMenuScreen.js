@@ -12,7 +12,7 @@ import {
   getItemsByName,
   getParentsByParentKey,
 } from "../../functions/functions";
-import { firestoreConnect } from "react-redux-firebase";
+import { firestoreConnect, isLoaded } from "react-redux-firebase";
 import { compose } from "redux";
 
 class EditMenuScreen extends React.Component {
@@ -113,7 +113,7 @@ class EditMenuScreen extends React.Component {
       this.props.route.params.menu.id,
       {
         name: this.state.menuName,
-        parentKey: this.state.menuParentKey,
+        parentId: this.state.menuParentId,
         description: this.state.description,
         price: this.state.price,
         createdBy: this.props.route.params.menu.createdBy,
@@ -141,7 +141,11 @@ class EditMenuScreen extends React.Component {
   };
 
   render() {
-    const { stall, menu } = this.props.route.params;
+    const { foodCentres, stalls, menus } = this.props;
+
+    if (!isLoaded(foodCentres) && !isLoaded(stalls) && !isLoaded(menus)) {
+      return <Text>Loading ...</Text>;
+    }
 
     return (
       <View style={styles.container}>
@@ -219,7 +223,6 @@ const mapStateToProps = (state) => ({
   foodCentres: state.firestore.ordered.foodCentres,
   stalls: state.firestore.ordered.stalls,
   menus: state.firestore.ordered.menus,
-  user: state.user,
 });
 
 export default compose(

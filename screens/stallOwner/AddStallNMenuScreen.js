@@ -9,7 +9,7 @@ import {
   editMenusData,
 } from "../../app-redux/actions";
 import { getItemsByName, getItemsByParentKey } from "../../functions/functions";
-import { firestoreConnect } from "react-redux-firebase";
+import { firestoreConnect, isLoaded } from "react-redux-firebase";
 import { compose } from "redux";
 
 class AddStallNMenuScreen extends React.Component {
@@ -86,7 +86,7 @@ class AddStallNMenuScreen extends React.Component {
     this.props.updateStallsData({
       name: this.state.stallName,
       parentId: this.state.stallParentId,
-      createdBy: this.props.user.userId,
+      createdBy: this.props.profile.userId,
     });
     this.setState({ isStallFormValid: false });
   };
@@ -97,7 +97,7 @@ class AddStallNMenuScreen extends React.Component {
       description: this.state.description,
       price: this.state.price,
       parentId: this.state.menuParentId,
-      createdBy: this.props.user.userId,
+      createdBy: this.props.profile.userId,
     });
 
     this.setState({
@@ -121,6 +121,11 @@ class AddStallNMenuScreen extends React.Component {
   };
 
   render() {
+    const { foodCentres, stalls, menus } = this.props;
+
+    if (!isLoaded(foodCentres) && !isLoaded(stalls) && !isLoaded(menus)) {
+      return <Text>Loading ...</Text>;
+    }
     return (
       <View style={styles.container}>
         <TextInput
@@ -197,7 +202,7 @@ const mapStateToProps = (state) => ({
   foodCentres: state.firestore.ordered.foodCentres,
   stalls: state.firestore.ordered.stalls,
   menus: state.firestore.ordered.menus,
-  user: state.user,
+  profile: state.firebase.profile,
 });
 
 export default compose(
