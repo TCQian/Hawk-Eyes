@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, FlatList, Button } from "react-native";
+import { Text, View, FlatList, Button, Alert } from "react-native";
 import { connect } from "react-redux";
 import { getItemsByParentKey } from "../../functions/functions";
 import { firestoreConnect, isLoaded } from "react-redux-firebase";
@@ -14,6 +14,10 @@ class StallMenu extends React.Component {
     });
   }
 
+  pressHandler = (arr) => {
+    this.props.orderFood(arr);
+    Alert.alert("Your food has been ordered");
+  };
   render() {
     const { menus, profile, Users } = this.props;
 
@@ -51,7 +55,7 @@ class StallMenu extends React.Component {
                   <Button
                     title="Order"
                     onPress={() =>
-                      this.props.orderFood([profile.userId, item, stallOwner])
+                      this.pressHandler([profile.userId, item, stallOwner])
                     }
                   />
                 </View>

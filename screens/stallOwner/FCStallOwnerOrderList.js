@@ -8,17 +8,24 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { globalstyles } from "../../styles/globalstyles";
+import { firestoreConnect, isLoaded } from "react-redux-firebase";
+import { compose } from "redux";
 import { connect } from "react-redux";
 import { orderDone } from "../../app-redux/orderActions";
-import { isLoaded } from "react-redux-firebase";
 
 function FCStallOwnerOrderList(props) {
-  const { profile, orderDone } = props;
-  const orders = profile.history;
+  const { profile, orderDone, Users } = props;
 
-  if (!isLoaded(profile)) {
+  if (!isLoaded(Users)) {
     return <Text>Loading...</Text>;
   }
+
+  if (!profile.userId) {
+    return null;
+  }
+
+  const orders = Users.filter((user) => user.userId === profile.userId)[0]
+    .history;
 
   return orders.length !== 0 ? (
     <View>
@@ -54,6 +61,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   profile: state.firebase.profile,
+  Users: state.firestore.ordered.Users,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -62,7 +70,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "Users" }])
 )(FCStallOwnerOrderList);
