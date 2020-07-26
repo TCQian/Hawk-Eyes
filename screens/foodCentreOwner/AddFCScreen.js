@@ -5,10 +5,11 @@ import Constants from "expo-constants";
 import { getItemsByName } from "../../functions/functions";
 import { updateFoodCentresData } from "../../app-redux/actions";
 import { addCreatedFoodCentre } from "../../app-redux/historyActions";
-
+import { firestoreConnect, isLoaded } from "react-redux-firebase";
+import { compose } from "redux";
 class AddFCScreen extends React.Component {
   handleSubmit = (formState) => {
-    const user = this.props.user;
+    const user = this.props.profile;
     const length = this.props.foodCentres.length;
     this.props.updateFoodCentresData({
       name: formState.name,
@@ -22,6 +23,11 @@ class AddFCScreen extends React.Component {
   };
 
   render() {
+    const { foodCentres } = this.props;
+
+    if (!isLoaded(foodCentres)) {
+      return <Text>Loading ...</Text>;
+    }
     return (
       <AddFCForm
         onSubmit={this.handleSubmit}
@@ -134,8 +140,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  foodCentres: state.foodCentres,
-  user: state.user,
+  foodCentres: state.firestore.ordered.foodCentres,
+  profile: state.firebase.profile,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -147,4 +153,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddFCScreen);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([{ collection: "foodCentres", orderBy: ["name", "asc"] }])
+)(AddFCScreen);

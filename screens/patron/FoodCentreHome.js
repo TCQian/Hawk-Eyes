@@ -7,7 +7,6 @@ import {
   deleteFoodCentresData,
   FOODCENTRE_USER,
 } from "../../app-redux/actions";
-import { addPatronSearchHistory } from "../../app-redux/historyActions";
 import { PATRON_USER } from "../../app-redux/actions";
 
 class FoodCentreHome extends React.Component {
@@ -66,8 +65,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addPatronSearchHistory: (foodCentreName) =>
-      dispatch(addPatronSearchHistory(foodCentreName)),
     deleteFoodCentresData: (foodCentre) =>
       dispatch(deleteFoodCentresData(foodCentre)),
   };
