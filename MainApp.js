@@ -24,16 +24,17 @@ import FCStallPersonalList from "./screens/stallOwner/FCStallPersonalList";
 import FCStallMenuPersonalList from "./screens/stallOwner/FCStallMenuPersonalList";
 import EditStallScreen from "./screens/stallOwner/EditStallScreen";
 import EditMenuScreen from "./screens/stallOwner/EditMenuScreen";
+import PatronScreen from "./screens/patron/PatronScreen";
 
 import {
-    FOODCENTRE_USER,
-    STALL_USER,
-    PATRON_USER,
-    watchFoodCentresData,
-    watchStallsData,
-    watchMenusData,
-    watchUserData,
-    setUserData,
+  FOODCENTRE_USER,
+  STALL_USER,
+  PATRON_USER,
+  watchFoodCentresData,
+  watchStallsData,
+  watchMenusData,
+  watchUserData,
+  setUserData,
 } from "./app-redux/actions";
 import { connect } from "react-redux";
 import * as firebase from "firebase";
@@ -41,148 +42,156 @@ import * as firebase from "firebase";
 const ScreenStack = createStackNavigator();
 
 class MainApp extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoadingComplete: false,
-            isAuthenticationReady: false,
-            isAuthenticated: false,
-        };
-        //props.watchFoodCentresData();
-        //props.watchMenusData();
-        //props.watchStallsData();
-        // listen to authentication
-        firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
-    }
-
-    onAuthStateChanged = (user) => {
-        if (user != null) {
-            this.props.watchUserData(user);
-            if (user) {
-                this.setState({ isAuthenticationReady: true });
-                this.setState({ isAuthenticated: !!user });
-            }
-        } else {
-            setUserData(null);
-            this.setState({ isAuthenticationReady: false });
-            this.setState({ isAuthenticated: false });
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoadingComplete: false,
+      isAuthenticationReady: false,
+      isAuthenticated: false,
     };
+    //props.watchFoodCentresData();
+    //props.watchMenusData();
+    //props.watchStallsData();
+    // listen to authentication
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+  }
 
-    // Occurs when signout is pressed...
-    onSignoutPress = () => {
-        Alert.alert(
-            "Signing Out...",
-            "Are you sure you want to sign out?",
-            [
-                { text: "Yes", onPress: () => firebase.auth().signOut() },
-                { text: "No" },
-            ],
-            { cancelable: false }
-        );
-    };
-
-    render() {
-        if (this.state.isAuthenticated && this.props.user.userType) {
-            return (
-                <View style={{ flex: 1 }}>
-                    <NavigationContainer>
-                        <ScreenStack.Navigator>
-                            {this.props.user.userType == FOODCENTRE_USER ? (
-                                <ScreenStack.Screen
-                                    name="FCOwnerScreen"
-                                    component={FCOwnerScreen}
-                                    options={{ title: "Food Centre Owner" }}
-                                />
-                            ) : null}
-
-                            {this.props.user.userType == STALL_USER ? (
-                                <ScreenStack.Screen
-                                    name="FCStallOwnerScreen"
-                                    component={FCStallOwnerScreen}
-                                    options={{ title: "Stall Owner" }}
-                                />
-                            ) : null}
-
-                            <ScreenStack.Screen
-                                name="PatronFoodCentre"
-                                component={PatronFoodCentre}
-                                options={{ title: "Food Centre" }}
-                            />
-
-                            <ScreenStack.Screen
-                                name="FoodCentreHome"
-                                component={FoodCentreHome}
-                                options={{ title: "Food Centre Details" }}
-                            />
-
-                            <ScreenStack.Screen
-                                name="Add Food Centre"
-                                component={AddFCScreen}
-                                options={{ title: "Add Food Centre" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Seats"
-                                component={PatronSeat}
-                                options={{ title: "Seats" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Stalls"
-                                component={PatronStall}
-                                options={{ title: "Stalls" }}
-                            />
-
-                            <ScreenStack.Screen
-                                name="Stall Personal List"
-                                component={FCStallPersonalList}
-                                options={{ title: "My Stall List" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Menu"
-                                component={StallMenu}
-                                options={{ title: "Menu" }}
-                            />
-
-                            <ScreenStack.Screen
-                                name="Edit Food Centre"
-                                component={EditFCScreen}
-                                options={{ title: "Edit Food Centre" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Add Stall and Menu"
-                                component={AddStallNMenuScreen}
-                                options={{ title: "Add Stall and Menu" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Menu Personal List"
-                                component={FCStallMenuPersonalList}
-                                options={{ title: "My Menu List" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Edit Stall"
-                                component={EditStallScreen}
-                                options={{ title: "Edit Stall" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Edit Menu"
-                                component={EditMenuScreen}
-                                options={{ title: "Edit Menu" }}
-                            />
-                            <ScreenStack.Screen
-                                name="Seating Plan"
-                                component={SeatingPlan}
-                                options={{ title: "Seating Plan" }}
-                            />
-                        </ScreenStack.Navigator>
-                    </NavigationContainer>
-                </View>
-            ); // user information can be passed in to handle user database
-        } else {
-            return <Authentication />;
-        }
+  onAuthStateChanged = (user) => {
+    if (user != null) {
+      this.props.watchUserData(user);
+      if (user) {
+        this.setState({ isAuthenticationReady: true });
+        this.setState({ isAuthenticated: !!user });
+      }
+    } else {
+      setUserData(null);
+      this.setState({ isAuthenticationReady: false });
+      this.setState({ isAuthenticated: false });
     }
+  };
 
-    /*
+  // Occurs when signout is pressed...
+  onSignoutPress = () => {
+    Alert.alert(
+      "Signing Out...",
+      "Are you sure you want to sign out?",
+      [
+        { text: "Yes", onPress: () => firebase.auth().signOut() },
+        { text: "No" },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  render() {
+    if (this.state.isAuthenticated && this.props.user.userType) {
+      return (
+        <View style={{ flex: 1 }}>
+          <NavigationContainer>
+            <ScreenStack.Navigator>
+              {this.props.user.userType == FOODCENTRE_USER ? (
+                <ScreenStack.Screen
+                  name="FCOwnerScreen"
+                  component={FCOwnerScreen}
+                  options={{ title: "Food Centre Owner" }}
+                />
+              ) : null}
+
+              {this.props.user.userType == STALL_USER ? (
+                <ScreenStack.Screen
+                  name="FCStallOwnerScreen"
+                  component={FCStallOwnerScreen}
+                  options={{ title: "Stall Owner" }}
+                />
+              ) : null}
+
+              {this.props.user.userType == PATRON_USER ? (
+                <ScreenStack.Screen
+                  name="PatronScreen"
+                  component={PatronScreen}
+                  options={{ title: "Patron" }}
+                />
+              ) : null}
+
+              <ScreenStack.Screen
+                name="PatronFoodCentre"
+                component={PatronFoodCentre}
+                options={{ title: "Food Centre" }}
+              />
+
+              <ScreenStack.Screen
+                name="FoodCentreHome"
+                component={FoodCentreHome}
+                options={{ title: "Food Centre Details" }}
+              />
+
+              <ScreenStack.Screen
+                name="Add Food Centre"
+                component={AddFCScreen}
+                options={{ title: "Add Food Centre" }}
+              />
+              <ScreenStack.Screen
+                name="Seats"
+                component={PatronSeat}
+                options={{ title: "Seats" }}
+              />
+              <ScreenStack.Screen
+                name="Stalls"
+                component={PatronStall}
+                options={{ title: "Stalls" }}
+              />
+
+              <ScreenStack.Screen
+                name="Stall Personal List"
+                component={FCStallPersonalList}
+                options={{ title: "My Stall List" }}
+              />
+              <ScreenStack.Screen
+                name="Menu"
+                component={StallMenu}
+                options={{ title: "Menu" }}
+              />
+
+              <ScreenStack.Screen
+                name="Edit Food Centre"
+                component={EditFCScreen}
+                options={{ title: "Edit Food Centre" }}
+              />
+              <ScreenStack.Screen
+                name="Add Stall and Menu"
+                component={AddStallNMenuScreen}
+                options={{ title: "Add Stall and Menu" }}
+              />
+              <ScreenStack.Screen
+                name="Menu Personal List"
+                component={FCStallMenuPersonalList}
+                options={{ title: "My Menu List" }}
+              />
+              <ScreenStack.Screen
+                name="Edit Stall"
+                component={EditStallScreen}
+                options={{ title: "Edit Stall" }}
+              />
+              <ScreenStack.Screen
+                name="Edit Menu"
+                component={EditMenuScreen}
+                options={{ title: "Edit Menu" }}
+              />
+              <ScreenStack.Screen
+                name="Seating Plan"
+                component={SeatingPlan}
+                options={{ title: "Seating Plan" }}
+              />
+            </ScreenStack.Navigator>
+          </NavigationContainer>
+        </View>
+      ); // user information can be passed in to handle user database
+    } else {
+      return <Authentication />;
+    }
+  }
+
+  /*
     if (
             (!this.state.isLoadingComplete ||
                 !this.state.isAuthenticationReady) &&
@@ -225,48 +234,48 @@ class MainApp extends React.Component {
 }
 
 const Authentication = (props) => (
-    <NavigationContainer>
-        <ScreenStack.Navigator>
-            <ScreenStack.Screen
-                name="LoginScreen"
-                component={LoginScreen}
-                options={{ title: "HawkEyes" }}
-            />
-            <ScreenStack.Screen
-                name="SignUpScreen"
-                component={SignUpScreen}
-                options={{ title: "Sign Up" }}
-            />
-            <ScreenStack.Screen
-                name="ForgotPasswordScreen"
-                component={ForgotPasswordScreen}
-                options={{ title: "Forgot Password?" }}
-            />
-        </ScreenStack.Navigator>
-    </NavigationContainer>
+  <NavigationContainer>
+    <ScreenStack.Navigator>
+      <ScreenStack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{ title: "HawkEyes" }}
+      />
+      <ScreenStack.Screen
+        name="SignUpScreen"
+        component={SignUpScreen}
+        options={{ title: "Sign Up" }}
+      />
+      <ScreenStack.Screen
+        name="ForgotPasswordScreen"
+        component={ForgotPasswordScreen}
+        options={{ title: "Forgot Password?" }}
+      />
+    </ScreenStack.Navigator>
+  </NavigationContainer>
 );
 
 const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-    };
+  return {
+    user: state.user,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        watchFoodCentresData: () => {
-            dispatch(watchFoodCentresData());
-        },
-        watchMenusData: () => {
-            dispatch(watchMenusData());
-        },
-        watchStallsData: () => {
-            dispatch(watchStallsData());
-        },
-        watchUserData: (user) => {
-            dispatch(watchUserData(user));
-        },
-    };
+  return {
+    watchFoodCentresData: () => {
+      dispatch(watchFoodCentresData());
+    },
+    watchMenusData: () => {
+      dispatch(watchMenusData());
+    },
+    watchStallsData: () => {
+      dispatch(watchStallsData());
+    },
+    watchUserData: (user) => {
+      dispatch(watchUserData(user));
+    },
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainApp);

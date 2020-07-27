@@ -17,7 +17,12 @@ import {
   PATRON_USER,
 } from "./actions";
 import { ADD_PATRON_SEARCH_HISTORY } from "./historyActions";
-import { ORDER_FOOD, ORDER_DONE } from "./orderActions";
+import {
+  ORDER_FOOD,
+  ORDER_DONE,
+  PATRON_ORDER_FOOD,
+  PATRON_ORDER_DONE,
+} from "./orderActions";
 
 import { firebaseReducer } from "react-redux-firebase";
 import { firestoreReducer } from "redux-firestore";
@@ -95,7 +100,13 @@ const userReducer = (state = {}, action) => {
   if (action.type == ORDER_FOOD) {
     return state;
   }
+  if (action.type == PATRON_ORDER_FOOD) {
+    return state;
+  }
   if (action.type == ORDER_DONE) {
+    return state;
+  }
+  if (action.type == PATRON_ORDER_DONE) {
     return state;
   }
   return state;

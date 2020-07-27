@@ -52,8 +52,9 @@ function FCStallMenuPersonalList(props) {
   }, [navigation]);
 
   return createdMenus.length !== 0 ? (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
+        style={{ flex: 1 }}
         data={createdMenus}
         renderItem={({ item }) => (
           <TouchableOpacity>

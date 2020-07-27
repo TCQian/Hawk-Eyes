@@ -25,8 +25,9 @@ class PatronStall extends React.Component {
       (stall) => stall.parentId === this.props.route.params.foodCentre.id
     );
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
+          style={{ flex: 1 }}
           keyExtractor={(item) => item.id}
           data={filteredStalls}
           renderItem={({ item }) => (

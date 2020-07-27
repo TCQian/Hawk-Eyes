@@ -1,6 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, StyleSheet, TextInput, View, Text } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import Constants from "expo-constants";
 import {
   updateStallsData,
@@ -158,56 +166,62 @@ class EditStallScreen extends React.Component {
       return <Text>Loading ...</Text>;
     }
     return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          value={this.state.fcName}
-          onChangeText={this.getHandler("fcName")}
-          placeholder="Name Of The Food Center"
-        />
-        <TextInput
-          style={styles.input}
-          value={this.state.stallName}
-          onChangeText={this.getHandler("stallName")}
-          placeholder="Name Of The Stall"
-        />
-
-        {isAddMenu ? null : (
-          <Button
-            title="Save Changes"
-            onPress={this.handleEditStall}
-            disabled={!this.state.isStallFormValid}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View style={styles.container}>
+          <TextInput
+            style={styles.input}
+            value={this.state.fcName}
+            onChangeText={this.getHandler("fcName")}
+            placeholder="Name Of The Food Center"
           />
-        )}
+          <TextInput
+            style={styles.input}
+            value={this.state.stallName}
+            onChangeText={this.getHandler("stallName")}
+            placeholder="Name Of The Stall"
+          />
 
-        <TextInput
-          style={styles.input}
-          value={this.state.menuName}
-          onChangeText={this.getHandler("menuName")}
-          placeholder="Name Of The Food"
-        />
-        <TextInput
-          style={styles.input}
-          value={this.state.description}
-          onChangeText={this.getHandler("description")}
-          placeholder="Description Of The Food"
-        />
-        <TextInput
-          style={styles.input}
-          value={this.state.price}
-          onChangeText={this.getHandler("price")}
-          placeholder="Price Of The Food"
-        />
+          {isAddMenu ? null : (
+            <Button
+              title="Save Changes"
+              onPress={this.handleEditStall}
+              disabled={!this.state.isStallFormValid}
+            />
+          )}
 
-        <Button
-          title="Create Menu"
-          onPress={this.handleCreateMenu}
-          disabled={!this.state.isMenuFormValid}
-        />
+          <TextInput
+            style={styles.input}
+            value={this.state.menuName}
+            onChangeText={this.getHandler("menuName")}
+            placeholder="Name Of The Food"
+          />
+          <TextInput
+            style={styles.input}
+            value={this.state.description}
+            onChangeText={this.getHandler("description")}
+            placeholder="Description Of The Food"
+          />
+          <TextInput
+            style={styles.input}
+            value={this.state.price}
+            onChangeText={this.getHandler("price")}
+            placeholder="Price Of The Food"
+          />
 
-        <Text style={styles.text}> Press the Done Button To Leave Page </Text>
-        <Button title="Done" onPress={this.handleDone} />
-      </View>
+          <Button
+            title="Create Menu"
+            onPress={this.handleCreateMenu}
+            disabled={!this.state.isMenuFormValid}
+          />
+
+          <Text style={styles.text}> Press the Done Button To Leave Page </Text>
+          <Button title="Done" onPress={this.handleDone} />
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

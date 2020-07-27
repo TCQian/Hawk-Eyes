@@ -1,6 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  TextInput,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import Constants from "expo-constants";
 import { getItemsByName } from "../../functions/functions";
 import { editFoodCentresData } from "../../app-redux/actions";
@@ -82,39 +89,45 @@ class EditFCForm extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          value={this.state.name}
-          onChangeText={this.getHandler("name")}
-          placeholder="Name"
-        />
-        <TextInput
-          style={styles.input}
-          value={this.state.numberOfStalls}
-          onChangeText={this.getHandler("numberOfStalls")}
-          placeholder="Number Of Stalls"
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          value={this.state.capacity}
-          onChangeText={this.getHandler("capacity")}
-          placeholder="Capacity"
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          value={this.state.address}
-          onChangeText={this.getHandler("address")}
-          placeholder="Address"
-        />
-        <Button
-          title="Save changes"
-          onPress={this.handleSubmit}
-          disabled={!this.state.isFormValid}
-        />
-      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View style={styles.container}>
+          <TextInput
+            style={styles.input}
+            value={this.state.name}
+            onChangeText={this.getHandler("name")}
+            placeholder="Name"
+          />
+          <TextInput
+            style={styles.input}
+            value={this.state.numberOfStalls}
+            onChangeText={this.getHandler("numberOfStalls")}
+            placeholder="Number Of Stalls"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            value={this.state.capacity}
+            onChangeText={this.getHandler("capacity")}
+            placeholder="Capacity"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            value={this.state.address}
+            onChangeText={this.getHandler("address")}
+            placeholder="Address"
+          />
+          <Button
+            title="Save changes"
+            onPress={this.handleSubmit}
+            disabled={!this.state.isFormValid}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

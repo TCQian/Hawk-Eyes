@@ -27,8 +27,9 @@ function FCStallPersonalList(props) {
   const { navigation } = props;
 
   return createdStalls.length !== 0 ? (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
+        style={{ flex: 1 }}
         data={createdStalls}
         renderItem={({ item }) => (
           <TouchableOpacity
