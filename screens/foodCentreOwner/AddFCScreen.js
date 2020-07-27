@@ -7,6 +7,7 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 import Constants from "expo-constants";
 import { getItemsByName } from "../../functions/functions";
@@ -94,52 +95,53 @@ class AddFCForm extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <View style={styles.container}>
-          <TextInput
-            style={styles.input}
-            value={this.state.name}
-            onChangeText={this.getHandler("name")}
-            placeholder="Name"
-          />
-          <TextInput
-            style={styles.input}
-            value={this.state.numberOfStalls}
-            onChangeText={this.getHandler("numberOfStalls")}
-            placeholder="Number Of Stalls"
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            value={this.state.capacity}
-            onChangeText={this.getHandler("capacity")}
-            placeholder="Capacity"
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={styles.input}
-            value={this.state.address}
-            onChangeText={this.getHandler("address")}
-            placeholder="Address"
-          />
-          <Button
-            title="Submit"
-            onPress={this.handleSubmit}
-            disabled={!this.state.isFormValid}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+      <KeyboardAvoidingView behavior="padding">
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View style={styles.container}>
+            <TextInput
+              style={styles.input}
+              value={this.state.name}
+              onChangeText={this.getHandler("name")}
+              placeholder="Name"
+            />
+            <TextInput
+              style={styles.input}
+              value={this.state.numberOfStalls}
+              onChangeText={this.getHandler("numberOfStalls")}
+              placeholder="Number Of Stalls"
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={styles.input}
+              value={this.state.capacity}
+              onChangeText={this.getHandler("capacity")}
+              placeholder="Capacity"
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={styles.input}
+              value={this.state.address}
+              onChangeText={this.getHandler("address")}
+              placeholder="Address"
+            />
+            <Button
+              title="Submit"
+              onPress={this.handleSubmit}
+              disabled={!this.state.isFormValid}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     paddingTop: Constants.statusBarHeight,
     backgroundColor: "#ecf0f1",
