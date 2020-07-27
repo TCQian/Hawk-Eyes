@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,8 @@ import {
   TextInput,
   Button,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { globalstyles } from "../../styles/globalstyles";
 import Card from "../../styles/cards";
@@ -21,6 +23,8 @@ import * as firebase from "firebase";
 import { addPatronSearchHistory } from "../../app-redux/historyActions";
 
 function PatronFoodCentre(props) {
+  const [searchTerm, setSearchTerm] = useState("");
+
   const { navigation, profile, foodCentres } = props;
   const signOutPress = () => {
     Alert.alert(
@@ -48,10 +52,6 @@ function PatronFoodCentre(props) {
   }, [navigation]);
 
   const pressHandler = (foodCentre) => {
-    const { profile } = props;
-    if (profile.userType === "PATRON_USER") {
-      props.addPatronSearchHistory([profile, foodCentre.name]);
-    }
     props.navigation.navigate("FoodCentreHome", {
       foodCentre,
     });
@@ -62,43 +62,57 @@ function PatronFoodCentre(props) {
     return <Text>Loading ...</Text>;
   }
 
-  return (
-    <View>
-      <View style={styles.searchBar}>
-        <EvilIcons name="search" size={35} />
+  const dynamicSearch = () => {
+    return foodCentres.filter((foodCentre) =>
+      foodCentre.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
 
-        <TextInput
-          style={{
-            width: 250,
-            height: 35,
-            borderColor: "black",
-            borderWidth: 1,
-          }}
-          onChangeText={(val) => {
-            //setInput(val);
-          }}
-          //value={input}
-          placeholder="Search Food Centre"
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <View style={{ flex: 1 }}>
+        <View style={styles.searchBar}>
+          <EvilIcons name="search" size={35} />
+
+          <TextInput
+            style={{
+              width: 250,
+              height: 35,
+              borderColor: "black",
+              borderWidth: 1,
+            }}
+            onChangeText={(input) => {
+              setSearchTerm(input);
+            }}
+            value={searchTerm}
+            placeholder="Search Food Centre"
+          />
+        </View>
+        <FlatList
+          keyExtractor={(item) => item.id}
+          style={styles.flatList}
+          data={dynamicSearch()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => pressHandler(item)}>
+              <Card>
+                <Text style={globalstyles.title}>{item.name}</Text>
+              </Card>
+            </TouchableOpacity>
+          )}
         />
       </View>
-      <FlatList
-        keyExtractor={(item) => item.id}
-        style={styles.flatList}
-        data={props.foodCentres}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => pressHandler(item)}>
-            <Card>
-              <Text style={globalstyles.title}>{item.name}</Text>
-            </Card>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  flatList: {},
+  flatList: {
+    flex: 1,
+  },
   searchBar: {
     flexDirection: "row",
     alignSelf: "center",
