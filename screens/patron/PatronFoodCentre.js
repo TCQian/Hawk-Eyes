@@ -98,8 +98,13 @@ function PatronFoodCentre(props) {
           data={dynamicSearch()}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => pressHandler(item)}>
-              <Card>
+              <Card
+                style={{
+                  flexDirection: "column",
+                }}
+              >
                 <Text style={globalstyles.title}>{item.name}</Text>
+                <Text style={{ alignSelf: "center" }}>{item.address}</Text>
               </Card>
             </TouchableOpacity>
           )}
