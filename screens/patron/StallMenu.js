@@ -22,6 +22,7 @@ class StallMenu extends React.Component {
     this.props.orderFood([profile.userId, menu, stallOwner]);
     this.props.patronOrderFood([profile, menu]);
     Alert.alert("Your food has been ordered");
+    this.props.navigation.popToTop();
   };
 
   render() {
